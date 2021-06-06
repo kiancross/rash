@@ -1,0 +1,14 @@
+codecov:
+  allow_coverage_offsets: true
+
+coverage:
+  status:
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
+
+comment:
+  layout: "reach, diff, flags"

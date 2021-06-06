@@ -1,0 +1,75 @@
+name: Automated Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate Build Tree ⚙️
+        run: cmake . -B build -DCODE_COVERAGE=on
+
+      - name: Build Library 🧰
+        run: cmake --build build --target rash
+      
+      - name: Build Tests 🧰
+        run: cmake --build build --target tests
+      
+      - name: Test 🔬
+        run: ctest --test-dir build
+  
+      - name: Upload Coverage Report 📊
+        uses: codecov/codecov-action@v1
+        with:
+          env_vars: OS
+      
+      - name: Save Testing Logs 📤
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: testing-logs
+          path: build/Testing
+ 
+
+  memory-leaks:
+    name: Check Memory Leaks
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Install Valgrind 🔧
+        run: sudo apt-get install valgrind
+
+      - name: Generate Build Tree ⚙️
+        run: cmake . -B build
+      
+      - name: Build 🧰
+        run: cmake --build build
+
+      - name: Check For Memory Leaks 🔬
+        run: ctest --test-dir build -T memcheck
+      
+      - name: Save Logs 📤
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: memory-check-logs
+          path: build/Testing
