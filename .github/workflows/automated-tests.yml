@@ -41,7 +41,7 @@ jobs:
       
       - name: Save Testing Logs 📤
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: testing-logs
           path: build/Testing
@@ -69,7 +69,7 @@ jobs:
       
       - name: Save Logs 📤
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: memory-check-logs
           path: build/Testing
