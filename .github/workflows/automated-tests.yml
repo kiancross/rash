@@ -20,7 +20,7 @@ jobs:
           - windows-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Generate Build Tree ⚙️
         run: cmake . -B build -DCODE_COVERAGE=on
@@ -53,7 +53,7 @@ jobs:
     needs: build-and-test
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       
       - name: Install Valgrind 🔧
         run: sudo apt-get install valgrind
